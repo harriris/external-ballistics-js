@@ -370,12 +370,12 @@ ExternalBallistics.prototype.getVelocityX = function(yardage) {
     if (yardage < this.maximumValidRange) {
         return this.solution[10*yardage+7];
     }
-	return 0;
+    return 0;
 };
 
 ExternalBallistics.prototype.getVelocityY = function(yardage) {
     if (yardage < this.maximumValidRange) {
         return this.solution[10*yardage+8];
     }
-	return 0;
+    return 0;
 };
