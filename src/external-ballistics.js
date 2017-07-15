@@ -1,6 +1,6 @@
 function ExternalBallistics() {
     this.BCOMP_MAXRANGE = 50001; // maximum ballistics calculation range in feet
-    this.DEFAULT_GRAVITY = -32.194; // gravity in feet - could also be set as a variable
+    this.DEFAULT_GRAVITY = -32.174; // gravity in feet - could also be set as a variable
     this.DEFAULT_YINTERCEPT = 0; // y-height of the projectile when it crosses the zero range (inches) - could also be set as a variable
     this.DRAG_FUNCTIONS = {
         'G1': {
