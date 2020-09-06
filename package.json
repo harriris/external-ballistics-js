@@ -1,0 +1,23 @@
+{
+  "name": "external-ballistics",
+  "version": "1.0.0",
+  "description": "A JavaScript port of the GNU Ballistics Library",
+  "main": "src/external-ballistics.js",
+  "dependencies": {
+    "jest": "^26.4.2"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "jest"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/harriris/external-ballistics-js.git"
+  },
+  "author": "harriris",
+  "license": "GPL-2.0-only",
+  "bugs": {
+    "url": "https://github.com/harriris/external-ballistics-js/issues"
+  },
+  "homepage": "https://github.com/harriris/external-ballistics-js#readme"
+}
