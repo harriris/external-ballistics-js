@@ -128,6 +128,14 @@ ExternalBallistics.prototype.setVariables = function(variables) {
     this.yIntercept = this.DEFAULT_YINTERCEPT;
     this.maximumValidRange = 0; // maximum valid range of the solution (feet)
     this.solution = [];
+
+    // set environmental variables or default to the "Standard Metro conditions"
+    this.altitude = typeof variables.altitude === "undefined" ? 0 : variables.altitude;
+    this.barometricPressure = typeof variables.barometricPressure === "undefined" ? 29.53 : variables.barometricPressure ;
+    this.temperature = typeof variables.temperature === "undefined" ? 59 : variables.temperature;
+    this.relativeHumidity = typeof variables.relativeHumidity === "undefined" ? .78 : variables.relativeHumidity;
+
+    this.dragCoefficient = this.getAtmosphericCorrectedDragCoefficient();
 };
 
 ExternalBallistics.prototype.solveAll = function() {
@@ -139,8 +147,8 @@ ExternalBallistics.prototype.solveAll = function() {
     var velocityX = this.muzzleVelocity * Math.cos( this.degToRad(zeroAngle) );
 	var velocityY = this.muzzleVelocity * Math.sin( this.degToRad(zeroAngle) );
 
-    var headWind = this.getHeadWind(this.windSpeed, this.windAngle);
-    var crossWind = this.getCrossWind(this.windSpeed, this.windAngle);
+    var headWind = this.getHeadWind(this.windAngle, this.windSpeed);
+    var crossWind = this.getCrossWind(this.windAngle, this.windSpeed);
 
     var gravityVectorX = this.gravity * Math.sin( this.degToRad( (this.shootingAngle + zeroAngle) ) );
     var gravityVectorY = this.gravity * Math.cos( this.degToRad( (this.shootingAngle + zeroAngle) ) );
@@ -379,3 +387,36 @@ ExternalBallistics.prototype.getVelocityY = function(yardage) {
     }
     return 0;
 };
+
+ExternalBallistics.prototype.getAtmosphericCorrectedDragCoefficient = function(){
+
+    var FA = this.calcFA(this.altitude);
+    var FT = this.calcFT(this.temperature, this.altitude);
+    var FR = this.calcFR(this.temperature, this.barometricPressure, this.relativeHumidity);
+    var FP = this.calcFP(this.barometricPressure);
+
+    // Calculate the atmospheric correction factor
+    var CD = (FA*(1+FT-FP)*FR);
+
+    return this.dragCoefficient * CD;
+}
+
+ExternalBallistics.prototype.calcFA = function(altitude){
+    var fa=-4e-15*Math.pow(altitude,3)+4e-10*Math.pow(altitude,2)-3e-5*altitude+1;
+    return (1/fa);
+}
+
+ExternalBallistics.prototype.calcFT = function(temperature, altitude){
+    var Tstd=-0.0036*altitude+59;
+    return (temperature-Tstd)/(459.6+Tstd);
+}
+
+ExternalBallistics.prototype.calcFR = function(temperature, barometricPressure, relativeHumidity){
+    var VPw=4e-6*Math.pow(temperature,3) - 0.0004*Math.pow(temperature,2)+0.0234*temperature-0.2517;
+    return 0.995*(barometricPressure/(barometricPressure-(0.3783)*(relativeHumidity)*VPw));
+}
+
+ExternalBallistics.prototype.calcFP = function(barometricPressure){
+    var Pstd=29.53; // in-hg
+    return (barometricPressure-Pstd)/(Pstd);
+}
