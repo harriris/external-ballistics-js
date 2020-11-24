@@ -139,8 +139,8 @@ ExternalBallistics.prototype.solveAll = function() {
     var velocityX = this.muzzleVelocity * Math.cos( this.degToRad(zeroAngle) );
 	var velocityY = this.muzzleVelocity * Math.sin( this.degToRad(zeroAngle) );
 
-    var headWind = this.getHeadWind(this.windSpeed, this.windAngle);
-    var crossWind = this.getCrossWind(this.windSpeed, this.windAngle);
+    var headWind = this.getHeadWind(this.windAngle, this.windSpeed);
+    var crossWind = this.getCrossWind(this.windAngle, this.windSpeed);
 
     var gravityVectorX = this.gravity * Math.sin( this.degToRad( (this.shootingAngle + zeroAngle) ) );
     var gravityVectorY = this.gravity * Math.cos( this.degToRad( (this.shootingAngle + zeroAngle) ) );
